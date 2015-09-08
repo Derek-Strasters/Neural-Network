@@ -1,0 +1,47 @@
+Plan:
+
+Forward-
+	
+	Definition of NN came from report.
+
+Declaration of experiment-
+
+	Definition of Neural Network to be used.
+	Define data sets to be used.
+	Define variables to be tested against.
+		Portion of dataset used to train. "POD"
+		Learning coeficient. "LC"
+		Number of Layers (Seek diminishing return). "NOL"
+		Number of Neurons in each layer (Full Factorial, seek diminishing return). "NPL"
+		
+		**Perhaps take large data over NOL, NPL space with best LC by successive approx. , and arbitrary constant POD.
+	Application of statistical analysis.
+
+Code-
+	
+	There is a feature to test training data for accuracy, the difference of each output expected is recorded.
+	Records the number of training events with the accuracy data.
+	Has the capability to easily generate networks of varying numbers of layer and layer sizes.
+		Layer sizes are recorded as a number series e.g. input 5 7 14 6 output
+		Can generate random layer dimentions for given number of layers.
+			Will need a "layer pool" with instances of layers of needed sizes.
+	Changes variables nu, layer size, and layer dimention automatically over a spectrum for large batch runs.
+	Has the capability to read in training data from text file.
+	User is able to choose a subset of all training data.
+	There are sets of standardized training data, multiple sizes of each set type.
+		Arbitrary 1 to 1 mapping with no correlation.
+		Simple counter correlation e.g. 0101 = 0010, 1111 = 0100, 1100 = 0010, 0100 = 0001 ...
+		Simple inverse correlation e.g. 1010 = 0101 ...
+
+Report-
+
+	Uses AIP Journal template main.tex
+	Contains an abstract.
+	Methodology section.
+		References doc.tex
+	Results section.
+		Graphs of outcomes, show a typical result of the accuracy over the number of iterations.
+		Graphs with areas of uncertainty.
+	Interpretation
+		Show best value/s for POD, LC, NOL, NPL. 
+		Show trends. Try to find trends independent of all but one variable.

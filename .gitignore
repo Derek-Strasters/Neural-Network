@@ -1,0 +1,9 @@
+*.cproject
+*.project
+*.markers
+*.texlipse
+/.indexexs/
+/.settings/
+.indexes
+gmon.out
+.gitignore~

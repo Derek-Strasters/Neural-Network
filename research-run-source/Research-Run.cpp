@@ -78,12 +78,12 @@ void BackPropTest() {
 	const int OUT = 5;
 
 	/* Make new Communication objects We'll construct them with the fist training pair */
-	CommAry<8> retina;
-	CommAry<5> expect;
+	CoAr<8> retina;
+	CoAr<5> expect;
 
 	/* Set first Training Set */
-	retina.SetFromAry(ti[0]);
-	expect.SetFromAry(ex[0]);
+	retina.SetFromAr(ti[0]);
+	expect.SetFromAr(ex[0]);
 
 	/* Create a Neural Network From A Template */
 	LayerBoss05<
@@ -103,7 +103,7 @@ void BackPropTest() {
 					>(retina, expect, 90.0);
 
 	/* Tie in to Output of Layers with a Communication objects */
-	const CommAry<OUT>& output = testNet->FeedForward(true);
+	const CoAr<OUT>& output = testNet->FeedForward(true);
 
 	/* Setup for User Input and UI */
 	double nu; // Learning factor.
@@ -215,11 +215,11 @@ void BackPropTest() {
 				was_selected[selection] = true;
 
 				/* Set Input Data and Feed Forward */
-				retina.SetFromAry(ti[selection]);
+				retina.SetFromAr(ti[selection]);
 				testNet->FeedForward();
 
 				/* Calculate Errors, each iteration adds it's error to a sum */
-				expect.SetFromAry(ex[selection]);
+				expect.SetFromAr(ex[selection]);
 				testNet->FeedBackward();
 			} //Each FeedBackward event adds to a sum of errors for this mini-batch.
 
@@ -242,25 +242,25 @@ void BackPropTest() {
 
 				cout << "╔══════════════════════════════════════════════════════════════════════════════╗\n";
 				cout << "║    Retina: ";
-				PrintAry(retina,MAGENTA);
+				PrintAr(retina,MAGENTA);
 				cout << setw(69 - INP * 7) << right << "║" << "\n║  Error 00: ";
 				PrintArySci(testNet->LLHD_.GetErrAry(), CYAN);
 				cout << setw(69 - L00 * 7) << right << "║" << "\n║  Layer 00: ";
-				PrintAry(testNet->LLHD_.GetOutAry(), RED);
+				PrintAr(testNet->LLHD_.GetOutAry(), RED);
 				cout << setw(69 - L00 * 7) << right << "║" << "\n║  Error 01: ";
 				PrintArySci(testNet->LL01_.GetErrAry(), CYAN);
 				cout << setw(69 - L01 * 7) << right << "║" << "\n║  Layer 01: ";
-				PrintAry(testNet->LL01_.GetOutAry(), RED);
+				PrintAr(testNet->LL01_.GetOutAry(), RED);
 				cout << setw(69 - L01 * 7) << right << "║" << "\n║  Error 02: ";
 				PrintArySci(testNet->LL02_.GetErrAry(), CYAN);
 				cout << setw(69 - L02 * 7) << right << "║" << "\n║  Layer 02: ";
-				PrintAry(testNet->LL02_.GetOutAry(), RED);
+				PrintAr(testNet->LL02_.GetOutAry(), RED);
 				cout << setw(69 - L02 * 7) << right << "║" << "\n║ Error OUT: ";
 				PrintArySci(testNet->LLTL_.GetErrAry(), CYAN);
 				cout << setw(69 - OUT * 7) << right << "║" << "\n║ Layer OUT: ";
-				PrintAryMatch(output, expect, YELLOW, GREEN, accuracy);
+				PrintArMatch(output, expect, YELLOW, GREEN, accuracy);
 				cout << setw(69 - OUT * 7) << right << "║" << "\n║   Trainer: ";
-				PrintAry(expect, MAGENTA);
+				PrintAr(expect, MAGENTA);
 				cout << setw(69 - OUT * 7) << right << "║" << "\n";
 
 				cout << "╠══════════════════════════════════════╤═══════════════════════════════════════╣\n";

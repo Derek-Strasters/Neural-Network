@@ -16,23 +16,23 @@
 
 template<int Size>
 struct Synapse {
-		const CommAry<Size>& output_ary_;
-		const CommAry<Size>& z_ary_;
-		CommAry<Size>& err_ary_;
-		CommAry<Size>& error_sum_;
+		const CoAr<Size>& output_ary_;
+		const CoAr<Size>& z_ary_;
+		CoAr<Size>& err_ary_;
+		CoAr<Size>& error_sum_;
 		Synapse(
-				const CommAry<Size>& out,
-				const CommAry<Size>& z,
-				CommAry<Size>& err,
-				CommAry<Size>& error_sum);
+				const CoAr<Size>& out,
+				const CoAr<Size>& z,
+				CoAr<Size>& err,
+				CoAr<Size>& error_sum);
 };
 
 template<int Size>
 inline Synapse<Size>::Synapse(
-		const CommAry<Size>& out,
-		const CommAry<Size>& z,
-		CommAry<Size>& err,
-		CommAry<Size>& error_sum) :
+		const CoAr<Size>& out,
+		const CoAr<Size>& z,
+		CoAr<Size>& err,
+		CoAr<Size>& error_sum) :
 				output_ary_(out),
 				z_ary_(z),
 				err_ary_(err),
@@ -70,22 +70,21 @@ class Layer {
 		CommMulSum<INP> MulSumIn;
 
 		//CommAry objects
-		CommAry<OUT> output_ary_; //<1> See foot notes
-		CommAry<OUT> z_ary_; //Neurons hold a references here.
-		CommAry<OUT> err_ary_; //Points to the 'in_err_ary_' in the next class.
-		CommAry<OUT> err_sum_; //Mini-Batch error sum.
+		CoAr<OUT> output_ary_; //<1> See foot notes
+		CoAr<OUT> z_ary_; //Neurons hold a references here.
+		CoAr<OUT> err_ary_; //Points to the 'in_err_ary_' in the next class.
+		CoAr<OUT> err_sum_; //Mini-Batch error sum.
 
 		//CommAry Tail specific, will refer to self otherwise.
-		const CommAry<OUT>& training_ary_ref_; //For Tail layer use only.
+		const CoAr<OUT>& training_ary_ref_; //For Tail layer use only.
 
 		//CommAry references
-		const CommAry<INP>& input_ary_; //Reference to previous layer.
-		const CommAry<INP>& in_z_ary_; //Reference to Z values of previous layer.
-		CommAry<INPsdf2>& in_err_ary_; //Reference to Error values of the previous layer.
-		CommAry<INP>& in_err_sum_; //Mini-Batch error sum.
+		const CoAr<INP>& input_ary_; //Reference to previous layer.
+		const CoAr<INP>& in_z_ary_; //Reference to Z values of previous layer.
+		CoAr<INP>& in_err_ary_; //Reference to Error values of the previous layer.
+		CoAr<INP>& in_err_sum_; //Mini-Batch error sum.
 
 		POSI::Position position_; // Stores what part of the layer chain this instance is.
-		asd 3
 		LayerWrap layer_;
 
 		//The functions used during activation of the neurons
@@ -97,9 +96,9 @@ class Layer {
 	public:
 
 		//---Constructors---
-		Layer(const CommAry<INP>& comm_in); //Makes Head
+		Layer(const CoAr<INP>& comm_in); //Makes Head
 		Layer(const Synapse<INP>& comm_prev); //Makes body
-		Layer(const Synapse<INP>& comm_prev, const CommAry<OUT>& comm_trainer); //Makes Tail
+		Layer(const Synapse<INP>& comm_prev, const CoAr<OUT>& comm_trainer); //Makes Tail
 		//TODO 1: Copies layer with different number of Neurons, removes duplicates.
 
 		//Destructors
@@ -117,12 +116,12 @@ class Layer {
 		void SetAllBiases(double (*f)(double first, double second), double first, double second);
 
 		//Getters and Setters
-		const CommAry<OUT>& GetOutAry();
-		const CommAry<OUT>& GetErrAry();
+		const CoAr<OUT>& GetOutAry();
+		const CoAr<OUT>& GetErrAry();
 		//For saving and loading
-		CommAry<OUT> GetBiases(); //TODO 1: Returns the bias values of this layer's neurons
+		CoAr<OUT> GetBiases(); //TODO 1: Returns the bias values of this layer's neurons
 		//TODO 1: Returns the weights of this layer's neurons
-		void SetBiases(const CommAry<OUT> biases); //TODO 1: Sets the bias values for each neuron
+		void SetBiases(const CoAr<OUT> biases); //TODO 1: Sets the bias values for each neuron
 		//TODO 1: Sets the weight values for each neuron
 
 		//Creates a link between layers
@@ -145,12 +144,12 @@ class Layer {
 /**************************************************|De/Constructor|***************************************************/
 
 template<template<int> class N_T, int INP, int OUT>
-Layer<N_T, INP, OUT>::Layer(const CommAry<INP>& comm_in) :
+Layer<N_T, INP, OUT>::Layer(const CoAr<INP>& comm_in) :
 				training_ary_ref_(output_ary_),
 				input_ary_(comm_in), //TODO: Find a damn sure way to block access to these!
 				in_z_ary_(comm_in), //A (poopy) way to deal with uninitialized ref's b/c Head has no use.
-				in_err_ary_(const_cast<CommAry<INP>&>(comm_in)), //Ugh, const_cast....
-				in_err_sum_(const_cast<CommAry<INP>&>(comm_in)),
+				in_err_ary_(const_cast<CoAr<INP>&>(comm_in)), //Ugh, const_cast....
+				in_err_sum_(const_cast<CoAr<INP>&>(comm_in)),
 				position_(POSI::Head) { //TODO: Make the head
 	Init();
 }
@@ -167,7 +166,7 @@ Layer<N_T, INP, OUT>::Layer(const Synapse<INP>& comm_prev) :
 }
 
 template<template<int> class N_T, int INP, int OUT>
-Layer<N_T, INP, OUT>::Layer(const Synapse<INP>& comm_prev, const CommAry<OUT>& comm_trainer) :
+Layer<N_T, INP, OUT>::Layer(const Synapse<INP>& comm_prev, const CoAr<OUT>& comm_trainer) :
 				training_ary_ref_(comm_trainer), //The only time this reference is assigned non trivially.
 				input_ary_(comm_prev.output_ary_),
 				in_z_ary_(comm_prev.z_ary_),
@@ -198,7 +197,7 @@ Layer<N_T, INP, OUT>::~Layer() {
 
 template<template<int> class N_T, int INP, int OUT>
 void Layer<N_T, INP, OUT>::SetWeight(int layer_depth, int input_depth, double weight) {
-	layer_.neurons_[layer_depth].weight_ary_[input_depth] = weight;
+	layer_.neurons_[layer_depth].wt_ar_[input_depth] = weight;
 }
 
 /******************************************************|SetBias|******************************************************/
@@ -214,7 +213,7 @@ template<template<int> class N_T, int INP, int OUT>
 void Layer<N_T, INP, OUT>::SetAllWeight(double (*f)()) {
 	for (int i = 0; i < OUT; i++) {
 		for (int j = 0; j < INP; j++) {
-			layer_.neurons_[i].weight_ary_.ary_[j] = f();
+			layer_.neurons_[i].wt_ar_.ary_[j] = f();
 		}
 	}
 }
@@ -230,7 +229,7 @@ template<template<int> class N_T, int INP, int OUT>
 void Layer<N_T, INP, OUT>::SetAllWeight(double (*f)(double first), double first) {
 	for (int i = 0; i < OUT; i++) {
 		for (int j = 0; j < INP; j++) {
-			layer_.neurons_[i].weight_ary_.ary_[j] = f(first);
+			layer_.neurons_[i].wt_ar_.ary_[j] = f(first);
 		}
 	}
 }
@@ -250,7 +249,7 @@ void Layer<N_T, INP, OUT>::SetAllWeight(
 
 	for (int i = 0; i < OUT; i++) {
 		for (int j = 0; j < INP; j++) {
-			layer_.neurons_[i].weight_ary_.ary_[j] = f(first, second);
+			layer_.neurons_[i].wt_ar_.ary_[j] = f(first, second);
 		}
 	}
 }
@@ -269,14 +268,14 @@ void Layer<N_T, INP, OUT>::SetAllBiases(
 /****************************************************|Get Output|*****************************************************/
 
 template<template<int> class N_T, int INP, int OUT>
-const CommAry<OUT>& Layer<N_T, INP, OUT>::GetOutAry() {
+const CoAr<OUT>& Layer<N_T, INP, OUT>::GetOutAry() {
 	return (output_ary_);
 }
 
 /*****************************************************|Get Error|*****************************************************/
 
 template<template<int> class N_T, int INP, int OUT>
-const CommAry<OUT>& Layer<N_T, INP, OUT>::GetErrAry() {
+const CoAr<OUT>& Layer<N_T, INP, OUT>::GetErrAry() {
 	return (err_ary_);
 }
 
@@ -285,7 +284,7 @@ const CommAry<OUT>& Layer<N_T, INP, OUT>::GetErrAry() {
 template<template<int> class N_T, int INP, int OUT> //TODO 2: Unroll this loop
 void Layer<N_T, INP, OUT>::Z_Cascade() {
 	for (int i = 0; i < OUT; i++) {
-		MulSumIn(z_ary_.ary_[i], input_ary_, layer_.neurons_[i].weight_ary_);
+		MulSumIn(z_ary_.ary_[i], input_ary_, layer_.neurons_[i].wt_ar_);
 		z_ary_.ary_[i] += layer_.neurons_[i].bias_;
 	}
 }
@@ -354,14 +353,14 @@ void Layer<N_T, INP, OUT>::ErrorCascade() {
 		double e_00 = 0, e_01 = 0, e_02 = 0, e_03 = 0, e_04 = 0, e_05 = 0, e_06 = 0, e_07 = 0;
 
 		for (int j = 0; j < rolled_total_out; j += 8) {
-			e_00 += layer_.neurons_[j + 0].weight_ary_.ary_[i] * err_ary_.ary_[j + 0];
-			e_01 += layer_.neurons_[j + 1].weight_ary_.ary_[i] * err_ary_.ary_[j + 1];
-			e_02 += layer_.neurons_[j + 2].weight_ary_.ary_[i] * err_ary_.ary_[j + 2];
-			e_03 += layer_.neurons_[j + 3].weight_ary_.ary_[i] * err_ary_.ary_[j + 3];
-			e_04 += layer_.neurons_[j + 4].weight_ary_.ary_[i] * err_ary_.ary_[j + 4];
-			e_05 += layer_.neurons_[j + 5].weight_ary_.ary_[i] * err_ary_.ary_[j + 5];
-			e_06 += layer_.neurons_[j + 6].weight_ary_.ary_[i] * err_ary_.ary_[j + 6];
-			e_07 += layer_.neurons_[j + 7].weight_ary_.ary_[i] * err_ary_.ary_[j + 7];
+			e_00 += layer_.neurons_[j + 0].wt_ar_.ary_[i] * err_ary_.ary_[j + 0];
+			e_01 += layer_.neurons_[j + 1].wt_ar_.ary_[i] * err_ary_.ary_[j + 1];
+			e_02 += layer_.neurons_[j + 2].wt_ar_.ary_[i] * err_ary_.ary_[j + 2];
+			e_03 += layer_.neurons_[j + 3].wt_ar_.ary_[i] * err_ary_.ary_[j + 3];
+			e_04 += layer_.neurons_[j + 4].wt_ar_.ary_[i] * err_ary_.ary_[j + 4];
+			e_05 += layer_.neurons_[j + 5].wt_ar_.ary_[i] * err_ary_.ary_[j + 5];
+			e_06 += layer_.neurons_[j + 6].wt_ar_.ary_[i] * err_ary_.ary_[j + 6];
+			e_07 += layer_.neurons_[j + 7].wt_ar_.ary_[i] * err_ary_.ary_[j + 7];
 		}
 
 		/* Error Array of previous layer is reinitialized to 0 or the sum of the loop unrolling */
@@ -369,7 +368,7 @@ void Layer<N_T, INP, OUT>::ErrorCascade() {
 
 		/* Error Array of previous layer continues remaining computation */
 		for (int j = rolled_total_out; j < OUT; j++) {
-			in_err_ary_.ary_[i] += layer_.neurons_[j].weight_ary_.ary_[i] * err_ary_.ary_[j];
+			in_err_ary_.ary_[i] += layer_.neurons_[j].wt_ar_.ary_[i] * err_ary_.ary_[j];
 		}
 
 		in_err_ary_.ary_[i] *= FctPrime(in_z_ary_.ary_[i]);
@@ -392,18 +391,18 @@ void Layer<N_T, INP, OUT>::DescendGradient(double learn_rate, double batch_size)
 		layer_.neurons_[i].bias_ -= coef * err_sum_.ary_[i];
 
 		for (int j = 0; j < rolled_total_in; j += 8) {
-			layer_.neurons_[i].weight_ary_.ary_[j + 0] -= coef * err_sum_.ary_[i] * input_ary_.ary_[j + 0];
-			layer_.neurons_[i].weight_ary_.ary_[j + 1] -= coef * err_sum_.ary_[i] * input_ary_.ary_[j + 1];
-			layer_.neurons_[i].weight_ary_.ary_[j + 2] -= coef * err_sum_.ary_[i] * input_ary_.ary_[j + 2];
-			layer_.neurons_[i].weight_ary_.ary_[j + 3] -= coef * err_sum_.ary_[i] * input_ary_.ary_[j + 3];
-			layer_.neurons_[i].weight_ary_.ary_[j + 4] -= coef * err_sum_.ary_[i] * input_ary_.ary_[j + 4];
-			layer_.neurons_[i].weight_ary_.ary_[j + 5] -= coef * err_sum_.ary_[i] * input_ary_.ary_[j + 5];
-			layer_.neurons_[i].weight_ary_.ary_[j + 6] -= coef * err_sum_.ary_[i] * input_ary_.ary_[j + 6];
-			layer_.neurons_[i].weight_ary_.ary_[j + 7] -= coef * err_sum_.ary_[i] * input_ary_.ary_[j + 7];
+			layer_.neurons_[i].wt_ar_.ary_[j + 0] -= coef * err_sum_.ary_[i] * input_ary_.ary_[j + 0];
+			layer_.neurons_[i].wt_ar_.ary_[j + 1] -= coef * err_sum_.ary_[i] * input_ary_.ary_[j + 1];
+			layer_.neurons_[i].wt_ar_.ary_[j + 2] -= coef * err_sum_.ary_[i] * input_ary_.ary_[j + 2];
+			layer_.neurons_[i].wt_ar_.ary_[j + 3] -= coef * err_sum_.ary_[i] * input_ary_.ary_[j + 3];
+			layer_.neurons_[i].wt_ar_.ary_[j + 4] -= coef * err_sum_.ary_[i] * input_ary_.ary_[j + 4];
+			layer_.neurons_[i].wt_ar_.ary_[j + 5] -= coef * err_sum_.ary_[i] * input_ary_.ary_[j + 5];
+			layer_.neurons_[i].wt_ar_.ary_[j + 6] -= coef * err_sum_.ary_[i] * input_ary_.ary_[j + 6];
+			layer_.neurons_[i].wt_ar_.ary_[j + 7] -= coef * err_sum_.ary_[i] * input_ary_.ary_[j + 7];
 		}
 
 		for (int j = rolled_total_in; j < INP; j++) {
-			layer_.neurons_[i].weight_ary_.ary_[j] -= coef * err_sum_.ary_[i] * input_ary_.ary_[j];
+			layer_.neurons_[i].wt_ar_.ary_[j] -= coef * err_sum_.ary_[i] * input_ary_.ary_[j];
 		}
 	}
 

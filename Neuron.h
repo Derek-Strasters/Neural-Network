@@ -27,8 +27,8 @@ class Neuron : public DownCast<Neuro_Type<In_Size> > {
 	protected:
 
 		/* Mrs. Fields															(...cookies are delicious) */
-		CommAry<In_Size> ignored_ary_; // TODO 6: When a bias is below a threshold, stop computing the input there.
-		CommAry<In_Size> weight_ary_; // Array of weights for computing output. Unique to each neuron.
+		CoAr<In_Size> ig_ar_; // TODO 6: When a bias is below a threshold, stop computing the input there.
+		CoAr<In_Size> wt_ar_; // Array of weights for computing output. Unique to each neuron.
 		double bias_; // Similar to a weight, but applied to the final output.
 		double bias_fuzz_; // SPECIAL give random noise to output for each run.
 
@@ -90,17 +90,17 @@ FuncSig Neuron<Neuro_Type, In_Size>::GetActivationFctPrime() {
 } // More polymorphism.
 
 #endif /* NEURON_H_ */
-// <0> Hey look, it's a guarded definition so it doesn't get called twice and break the compile.
-// I give myself a smug pat on the back (I'm joking here of course :P ).
-// Further down things are going to get quite a bit more intense than some silly definition guards!
 
-// <1> Templates are used to pass in the array size at compile time, there is an underling CTRP base class.
-// It's also used for Polymorphism (Cool!) so that each child class can call a simple override, without v-tables!
-// Its an abstract class for other neurons to inherit, it has pseudo-virtual methods (how fancy :P)
-// It has a pointer to an array wrapper struct (that was a pain to implement) because the inputs of each
-// layer of neurons is shared between neurons and this was the best option performance-wise. The templating
-// uses some meta style templating to have a method that instantiate a generic type, intended for the derived
-// classes. 'weight' is instantiated to size and is meant to be set by the gradient decent operation.
+// <1> Neuron.h uses templates to pass in the array size at compile time, there is an underling CTRP base class.
+// There is a drawback, all layer sizes must be known at compile time.
+// CTRP also used for Polymorphism so that each child class can call a simple override, without slow v-table lookups.
+// Neuron is an abstract class for other non-abstract neurons to inherit, it has pseudo-virtual methods to be overridden.
+// This provides the programmer with the ability to quickly generate new neurons with different sigma funtions.
+// Neuron.h has a pointer to an array 'wrapper' struct because the inputs of each
+// layer of neurons is shared between neurons.
+// The templating scheme uses some meta style templating to have a method that instantiates a generic type,
+// intended for the derived classes.
+// The 'weight_ary_' object is instantiated to size and is meant to be updtaed by the gradient decent operation.
 // 'Ignored' is also of size and is set true by gradient decent when it is determined a check is not needed for
 // a particular index, again to help speed up the processing.
 // All arrays in a layer have the same size 'input_size' in easy fashion, because they all have something to do with.

@@ -7,14 +7,13 @@
 #include <ctime>
 #include <iostream>
 #include <cstdlib>
-#include <string>
+#include <string.h>
 #include <iomanip>
 #include <unistd.h>
 
 #include "DLog.h" // NOTICE: Must only be defined in main() .
 #include "Neuron.h"
-#include "Sigmoid.h"
-#include "Perceptron.h"
+#include "NeuronTypes.h"
 #include "POSI.h"
 #include "Color.h"
 #include "Layer.h"
@@ -79,12 +78,12 @@ void BackPropTest() {
 	const int OUT = 5;
 
 	/* Make new Communication objects We'll construct them with the fist training pair */
-	CommAry<INP> retina;
-	CommAry<OUT> expect;
+	CoAr<INP> retina;
+	CoAr<OUT> expect;
 
 	/* Set first Training Set */
-	retina.Set(ti[0]);
-	expect.Set(ex[0]);
+	retina.SetFromAr(ti[0]);
+	expect.SetFromAr(ex[0]);
 
 	/* Make and chain together LayerLord objects with proper input Communication */
 	Layer<Sigmoid, INP, L00>* LLHD = new Layer<Sigmoid, INP, L00>(retina);
@@ -93,15 +92,15 @@ void BackPropTest() {
 	Layer<Sigmoid, L02, OUT>* LLTL = new Layer<Sigmoid, L02, OUT>(LL02->Synaptogenisis(), expect);
 
 	/* Tie in to Output and Errors of Layers with Communication objects */
-	const CommAry<L00>& errHD = LLHD->GetErrAry();
-	const CommAry<L01>& err01 = LL01->GetErrAry();
-	const CommAry<L02>& err02 = LL02->GetErrAry();
-	const CommAry<OUT>& errTL = LLTL->GetErrAry();
+	const CoAr<L00>& errHD = LLHD->GetErrAry();
+	const CoAr<L01>& err01 = LL01->GetErrAry();
+	const CoAr<L02>& err02 = LL02->GetErrAry();
+	const CoAr<OUT>& errTL = LLTL->GetErrAry();
 
-	const CommAry<L00>& outHD = LLHD->GetOutAry();
-	const CommAry<L01>& out01 = LL01->GetOutAry();
-	const CommAry<L02>& out02 = LL02->GetOutAry();
-	const CommAry<OUT>& outTL = LLTL->GetOutAry();
+	const CoAr<L00>& outHD = LLHD->GetOutAry();
+	const CoAr<L01>& out01 = LL01->GetOutAry();
+	const CoAr<L02>& out02 = LL02->GetOutAry();
+	const CoAr<OUT>& outTL = LLTL->GetOutAry();
 
 	/* Initialize with random numbers */
 	LLHD->SetAllWeight(GetRaGCS, 0.02, (0.5 / INP));
@@ -199,8 +198,8 @@ void BackPropTest() {
 
 				was_selected[selection] = true;
 
-				retina.Set(ti[selection]);
-				expect.Set(ex[selection]);
+				retina.SetFromAr(ti[selection]);
+				expect.SetFromAr(ex[selection]);
 
 				/* ORDERED - Apply Activation Function */
 				LLHD->Z_Cascade();
@@ -240,25 +239,25 @@ void BackPropTest() {
 
 				cout << "╔══════════════════════════════════════════════════════════════════════════════╗\n";
 				cout << "║    Retina: ";
-				PrintAry(retina,MAGENTA);
+				PrintAr(retina,MAGENTA);
 				cout << setw(69 - INP * 7) << right << "║" << "\n║  Error 00: ";
 				PrintArySci(errHD, CYAN);
 				cout << setw(69 - L00 * 7) << right << "║" << "\n║  Layer 00: ";
-				PrintAry(outHD, RED);
+				PrintAr(outHD, RED);
 				cout << setw(69 - L00 * 7) << right << "║" << "\n║  Error 01: ";
 				PrintArySci(err01, CYAN);
 				cout << setw(69 - L01 * 7) << right << "║" << "\n║  Layer 01: ";
-				PrintAry(out01, RED);
+				PrintAr(out01, RED);
 				cout << setw(69 - L01 * 7) << right << "║" << "\n║  Error 02: ";
 				PrintArySci(err02, CYAN);
 				cout << setw(69 - L02 * 7) << right << "║" << "\n║  Layer 02: ";
-				PrintAry(out02, RED);
+				PrintAr(out02, RED);
 				cout << setw(69 - L02 * 7) << right << "║" << "\n║ Error OUT: ";
 				PrintArySci(errTL, CYAN);
 				cout << setw(69 - OUT * 7) << right << "║" << "\n║ Layer OUT: ";
-				PrintAryMatch(outTL, expect, YELLOW, GREEN, accuracy);
+				PrintArMatch(outTL, expect, YELLOW, GREEN, accuracy);
 				cout << setw(69 - OUT * 7) << right << "║" << "\n║   Trainer: ";
-				PrintAry(expect, MAGENTA);
+				PrintAr(expect, MAGENTA);
 				cout << setw(69 - OUT * 7) << right << "║" << "\n";
 
 				cout << "╠══════════════════════════════════════╤═══════════════════════════════════════╣\n";

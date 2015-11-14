@@ -14,7 +14,7 @@ RandTools* RandTools::myPointerInstance = NULL; // Instantiate
 RandTools* RandTools::Instance() { //All this work is so the random number only seeds once.
 	if (!myPointerInstance) {
 		std::srand(std::time(NULL));
-		DEBUG("RandTools Singlet Created\n");
+//		DEBUG("RandTools Singlet Created\n");
 	}
 
 	return (myPointerInstance ? myPointerInstance : (myPointerInstance = new RandTools));
@@ -24,7 +24,7 @@ void RandExitHandler() { // Callback to clean the heap on exit.
 	if (RandTools::myPointerInstance)
 		delete RandTools::myPointerInstance;
 
-	DEBUG("RandTools Singlet Deleted\n");
+//	DEBUG("RandTools Singlet Deleted\n");
 
 }
 

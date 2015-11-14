@@ -38,19 +38,19 @@ endif
 # Add inputs and outputs from these tool invocations to the build variables 
 
 # All Target
-all: demo
+all: NeuralNet-demo
 
 # Tool invocations
-demo: $(OBJS) $(USER_OBJS)
+NeuralNet-demo: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C++ Linker'
-	g++ -pg -o "demo" $(OBJS) $(USER_OBJS) $(LIBS)
+	g++ -shared -o "NeuralNet-demo" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) $(CC_DEPS)$(C++_DEPS)$(EXECUTABLES)$(C_UPPER_DEPS)$(CXX_DEPS)$(OBJS)$(CPP_DEPS)$(C_DEPS) demo
+	-$(RM) $(LIBRARIES)$(CC_DEPS)$(C++_DEPS)$(C_UPPER_DEPS)$(CXX_DEPS)$(OBJS)$(CPP_DEPS)$(C_DEPS) NeuralNet-demo
 	-@echo ' '
 
 .PHONY: all clean dependents

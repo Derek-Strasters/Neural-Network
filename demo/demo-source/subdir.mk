@@ -17,7 +17,7 @@ CPP_DEPS += \
 demo-source/Demo.o: ../demo-source/Demo.cpp
 	@echo 'Building file: $<'
 	@echo 'Invoking: GCC C++ Compiler'
-	g++ -I"/home/paracite/Research/NeuralNet" -O0 -g3 -pg -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"demo-source/Demo.d" -o "$@" "$<"
+	g++ -std=c++98 -I"/home/thehuman/Code Repos/NeuralNet" -O2 -g -pedantic -Wall -Wextra -Wconversion -c -fmessage-length=0 -v -fPIC -MMD -MP -MF"$(@:%.o=%.d)" -MT"demo-source/Demo.d" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 

@@ -26,50 +26,50 @@ typedef double (*FuncSig)(double z); // Defines a simple function signature.
 
 /************************************************|Communication Array|************************************************/
 
-template<int Ary_Size>
-struct CommAry {
-		double ary_[Ary_Size]; // The only actual data is this array
+template<int Ar_Sz>
+struct CoAr { //
+		double ary_[Ar_Sz]; // The only actual data is this array
 
-		void SetFromAry(const double (&copy_me)[Ary_Size]) {
+		void SetFromAr(const double (&copy_me)[Ar_Sz]) {
 			memcpy(ary_, copy_me, sizeof(ary_));
 		}
 
 		int Size() {
-			return Ary_Size;
+			return Ar_Sz;
 		}
 };
 
 /*-----------------------------------------|Communication Array Print Tools|-----------------------------------------*/
 
-template<int Ary_Size>
-void PrintAry(const CommAry<Ary_Size>& in, const char color[6]) {
-	if (Ary_Size > 50) {
+template<int Ar_Sz>
+void PrintAr(const CoAr<Ar_Sz>& in, const char color[6]) {
+	if (Ar_Sz > 50) {
 		throw std::invalid_argument("Array too large to print.");
 	}
 
 	std::cout << color << std::fixed << std::setprecision(3);
 	std::cout << std::right << std::setw(7) << in.ary_[0];
-	for (int i = 1; i < Ary_Size; ++i) {
+	for (int i = 1; i < Ar_Sz; ++i) {
 		std::cout << std::right << std::setw(7) << in.ary_[i];
 	}
 
 	std::cout << RESET;
 }
 
-template<int Ary_Size>
-void PrintAryMatch(
-		const CommAry<Ary_Size>& in,
-		const CommAry<Ary_Size>& compare,
+template<int Ar_Sz>
+void PrintArMatch(
+		const CoAr<Ar_Sz>& in,
+		const CoAr<Ar_Sz>& compare,
 		const char color_n[6],
 		const char color_y[6],
 		double factr) {
-	if (Ary_Size > 50) {
+	if (Ar_Sz > 50) {
 		throw std::invalid_argument("Array too large to print.");
 	}
 
-	bool is_match[Ary_Size];
+	bool is_match[Ar_Sz];
 
-	for (int i = 0; i < Ary_Size; i++) {
+	for (int i = 0; i < Ar_Sz; i++) {
 		is_match[i] = ( (in.ary_[i] - compare.ary_[i]) < factr && (in.ary_[i] - compare.ary_[i]) > -(factr)) ? true : false;
 	}
 
@@ -79,7 +79,7 @@ void PrintAryMatch(
 		std::cout << color_n;
 
 	std::cout << std::fixed << std::setprecision(3) << std::right << std::setw(7) << in.ary_[0] << RESET;
-	for (int i = 1; i < Ary_Size; ++i) {
+	for (int i = 1; i < Ar_Sz; ++i) {
 
 		if (is_match[i])
 
@@ -93,45 +93,45 @@ void PrintAryMatch(
 	std::cout << RESET;
 }
 
-template<int Ary_Size>
+template<int Ar_Sz>
 void PrintArySci(
-		const CommAry<Ary_Size>& in,
+		const CoAr<Ar_Sz>& in,
 		const char color[6]) {
-	if (Ary_Size > 50) {
+	if (Ar_Sz > 50) {
 		throw std::invalid_argument("Array too large to print.");
 	}
 
 	std::cout << color << std::scientific << std::setprecision(0);
 	std::cout << std::right << std::setw(7) << (in.ary_[0]);
-	for (int i = 1; i < Ary_Size; ++i) {
+	for (int i = 1; i < Ar_Sz; ++i) {
 		std::cout << std::right << std::setw(7) << (in.ary_[i]);
 	}
 
 	std::cout << RESET;
 }
 
-template<int Ary_Size>
+template<int Ar_Sz>
 void PrintAry(
-		const CommAry<Ary_Size>& in) {
-	if (Ary_Size > 100) {
+		const CoAr<Ar_Sz>& in) {
+	if (Ar_Sz > 100) {
 		throw std::invalid_argument("Array too large to print.");
 	}
 
 	std::cout << std::fixed << std::setprecision(3);
 	std::cout << ( (signbit(in.ary_[0]) != 0) ? ("") : (" ")) << std::setw(5) << in.ary_[0];
-	for (int i = 1; i < Ary_Size; ++i) {
+	for (int i = 1; i < Ar_Sz; ++i) {
 		std::cout << " " << std::setw(5) << in.ary_[i];
 	}
 }
 
-/*-------------------------------------------------|CommAry ToolBox|-------------------------------------------------*/
+/*-------------------------------------------------|CoAr ToolBox|-------------------------------------------------*/
 
-template<int Ary_Size>
+template<int Ar_Sz>
 struct CommZero { // Element-wise adds b to a, where parameter is a return parameter also.
-		static const int num_of_rolls = (int) (Ary_Size / 8);
+		static const int num_of_rolls = (int) (Ar_Sz / 8);
 		static const int rolled_total = num_of_rolls * 8;
 
-		void operator()(CommAry<Ary_Size>& a) {
+		void operator()(CoAr<Ar_Sz>& a) {
 
 			for (int i = 0; i < rolled_total; i += 8) {
 				a.ary_[i + 0] = 0;
@@ -144,18 +144,18 @@ struct CommZero { // Element-wise adds b to a, where parameter is a return param
 				a.ary_[i + 7] = 0;
 			}
 
-			for (int i = rolled_total; i < Ary_Size; i++) {
+			for (int i = rolled_total; i < Ar_Sz; i++) {
 				a.ary_[i] = 0;
 			}
 		}
 };
 
-template<int Ary_Size>
+template<int Ar_Sz>
 struct CommAdd { // Element-wise adds b to a, where parameter is a return parameter also.
-		static const int num_of_rolls = (int) (Ary_Size / 8);
+		static const int num_of_rolls = (int) (Ar_Sz / 8);
 		static const int rolled_total = num_of_rolls * 8;
 
-		void operator()(CommAry<Ary_Size>& a, const CommAry<Ary_Size>& b) {
+		void operator()(CoAr<Ar_Sz>& a, const CoAr<Ar_Sz>& b) {
 
 			for (int i = 0; i < rolled_total; i += 8) {
 				a.ary_[i + 0] += b.ary_[i + 0];
@@ -168,19 +168,19 @@ struct CommAdd { // Element-wise adds b to a, where parameter is a return parame
 				a.ary_[i + 7] += b.ary_[i + 7];
 			}
 
-			for (int i = rolled_total; i < Ary_Size; i++) {
+			for (int i = rolled_total; i < Ar_Sz; i++) {
 				a.ary_[i] += b.ary_[i];
 			}
 		}
 };
 
-template<int Ary_Size>
+template<int Ar_Sz>
 struct CommSub {
-		static const int num_of_rolls = (int) (Ary_Size / 8);
+		static const int num_of_rolls = (int) (Ar_Sz / 8);
 		static const int rolled_total = num_of_rolls * 8;
 
 		// Element-wise subtracts b from a, where parameter is a return parameter also.
-		void operator()(CommAry<Ary_Size>& a, const CommAry<Ary_Size>& b) {
+		void operator()(CoAr<Ar_Sz>& a, const CoAr<Ar_Sz>& b) {
 
 			for (int i = 0; i < rolled_total; i += 8) {
 				a.ary_[i + 0] -= b.ary_[i + 0];
@@ -193,13 +193,13 @@ struct CommSub {
 				a.ary_[i + 7] -= b.ary_[i + 7];
 			}
 
-			for (int i = rolled_total; i < Ary_Size; i++) {
+			for (int i = rolled_total; i < Ar_Sz; i++) {
 				a.ary_[i] -= b.ary_[i];
 			}
 		}
 
 		// Element-wise subtracts b from c, a is the return parameters
-		void operator()(CommAry<Ary_Size>& a, const CommAry<Ary_Size>& b, const CommAry<Ary_Size>& c) {
+		void operator()(CoAr<Ar_Sz>& a, const CoAr<Ar_Sz>& b, const CoAr<Ar_Sz>& c) {
 
 			for (int i = 0; i < rolled_total; i += 8) { //Possible DELETEME
 				a.ary_[i + 0] = 0;
@@ -212,7 +212,7 @@ struct CommSub {
 				a.ary_[i + 7] = 0;
 			}
 
-			for (int i = rolled_total; i < Ary_Size; i++) {
+			for (int i = rolled_total; i < Ar_Sz; i++) {
 				a.ary_[i] = 0;
 			}
 
@@ -227,18 +227,18 @@ struct CommSub {
 				a.ary_[i + 7] = c.ary_[i + 7] - b.ary_[i + 7];
 			}
 
-			for (int i = rolled_total; i < Ary_Size; i++) {
+			for (int i = rolled_total; i < Ar_Sz; i++) {
 				a.ary_[i] = c.ary_[i] - b.ary_[i];
 			}
 		}
 };
 
-template<int Ary_Size>
+template<int Ar_Sz>
 struct CommMulCns { // Sum of the element-wise products of b and c, c is a constant, a is the return parameter.
-		static const int num_of_rolls = (int) (Ary_Size / 8);
+		static const int num_of_rolls = (int) (Ar_Sz / 8);
 		static const int rolled_total = num_of_rolls * 8;
 
-		void operator()(const CommAry<Ary_Size>& a, const CommAry<Ary_Size>& b, const double& c) {
+		void operator()(const CoAr<Ar_Sz>& a, const CoAr<Ar_Sz>& b, const double& c) {
 			a = 0;
 			double a_00 = 0, a_01 = 0, a_02 = 0, a_03 = 0, a_04 = 0, a_05 = 0, a_06 = 0, a_07 = 0;
 
@@ -253,19 +253,19 @@ struct CommMulCns { // Sum of the element-wise products of b and c, c is a const
 				a_07 += b.ary_[i + 7] * c;
 			}
 
-			for (int i = rolled_total; i < Ary_Size; i++) {
+			for (int i = rolled_total; i < Ar_Sz; i++) {
 				a += b.ary_[i] * c;
 			}
 			a += a_00 + a_01 + a_02 + a_03 + a_04 + a_05 + a_06 + a_07;
 		}
 };
 
-template<int Ary_Size>
+template<int Ar_Sz>
 struct CommMulSum { // Sum of the element-wise products of b and c, a is the return parameter.
-		static const int num_of_rolls = (int) (Ary_Size / 8);
+		static const int num_of_rolls = (int) (Ar_Sz / 8);
 		static const int rolled_total = num_of_rolls * 8;
 
-		void operator()(double& a, const CommAry<Ary_Size>& b, const CommAry<Ary_Size>& c) {
+		void operator()(double& a, const CoAr<Ar_Sz>& b, const CoAr<Ar_Sz>& c) {
 			a = 0;
 			double a_00 = 0, a_01 = 0, a_02 = 0, a_03 = 0, a_04 = 0, a_05 = 0, a_06 = 0, a_07 = 0;
 
@@ -280,7 +280,7 @@ struct CommMulSum { // Sum of the element-wise products of b and c, a is the ret
 				a_07 += b.ary_[i + 7] * c.ary_[i + 7];
 			}
 
-			for (int i = rolled_total; i < Ary_Size; i++) {
+			for (int i = rolled_total; i < Ar_Sz; i++) {
 				a += b.ary_[i] * c.ary_[i];
 			}
 			a += a_00 + a_01 + a_02 + a_03 + a_04 + a_05 + a_06 + a_07;

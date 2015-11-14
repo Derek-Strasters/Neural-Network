@@ -36,10 +36,10 @@ class LayerBoss02 {
 
 	public:
 
-		LayerBoss02(const CommAry<INP>& retina, const CommAry<OUT>& trainer, double nu);
+		LayerBoss02(const CoAr<INP>& retina, const CoAr<OUT>& trainer, double nu);
 
 		void FeedForward();
-		void FeedForward(CommAry<OUT>& output);
+		void FeedForward(CoAr<OUT>& output);
 		void FeedBackward();
 		void Update(double nu, int batch_size);
 };
@@ -53,7 +53,7 @@ inline LayerBoss02<
 		N_T,
 		INP,
 		OUT
->::LayerBoss02(const CommAry<INP>& retina, const CommAry<OUT>& trainer, double nu) :
+>::LayerBoss02(const CoAr<INP>& retina, const CoAr<OUT>& trainer, double nu) :
 				LLTL_(Layer<N_T, INP, OUT>(LLTL_.Synaptogenisis(), trainer)) {
 
 	LLTL_.SetAllWeight(GetRaGCS, 0.02, (0.5 / INP));
@@ -81,7 +81,7 @@ template<template<int> class N_T, //Type of Neuron
 inline void LayerBoss02<
 		N_T,
 		INP,
-		OUT>::FeedForward(CommAry<OUT>& output) {
+		OUT>::FeedForward(CoAr<OUT>& output) {
 	FeedForward();
 	output = LLTL_.GetOutAry();
 }
@@ -124,10 +124,10 @@ class LayerBoss03 {
 
 	public:
 
-		LayerBoss03(const CommAry<INP>& retina, const CommAry<OUT>& trainer, double nu);
+		LayerBoss03(const CoAr<INP>& retina, const CoAr<OUT>& trainer, double nu);
 
 		void FeedForward();
-		void FeedForward(CommAry<OUT>& output);
+		void FeedForward(CoAr<OUT>& output);
 		void FeedBackward();
 		void Update(double nu, int batch_size);
 };
@@ -143,7 +143,7 @@ inline LayerBoss03<
 		INP,
 		L00,
 		OUT
->::LayerBoss03(const CommAry<INP>& retina, const CommAry<OUT>& trainer, double nu) :
+>::LayerBoss03(const CoAr<INP>& retina, const CoAr<OUT>& trainer, double nu) :
 				LLHD_(Layer<N_T, INP, L00>(retina)),
 				LLTL_(Layer<N_T, L00, OUT>(LLHD_.Synaptogenisis(), trainer)) {
 
@@ -180,7 +180,7 @@ inline void LayerBoss03<
 		N_T,
 		INP,
 		L00,
-		OUT>::FeedForward(CommAry<OUT>& output) {
+		OUT>::FeedForward(CoAr<OUT>& output) {
 	FeedForward();
 	output = LLTL_.GetOutAry();
 }
@@ -232,10 +232,10 @@ class LayerBoss04 {
 
 		//public: TODO: TEST
 
-		LayerBoss04(const CommAry<INP>& retina, const CommAry<OUT>& trainer, double nu);
+		LayerBoss04(const CoAr<INP>& retina, const CoAr<OUT>& trainer, double nu);
 
 		void FeedForward();
-		void FeedForward(CommAry<OUT>& output);
+		void FeedForward(CoAr<OUT>& output);
 		void FeedBackward();
 		void Update(double nu, int batch_size);
 };
@@ -253,7 +253,7 @@ inline LayerBoss04<
 		L00,
 		L01,
 		OUT
->::LayerBoss04(const CommAry<INP>& retina, const CommAry<OUT>& trainer, double nu) :
+>::LayerBoss04(const CoAr<INP>& retina, const CoAr<OUT>& trainer, double nu) :
 				LLHD_(Layer<N_T, INP, L00>(retina)),
 				LL01_(Layer<N_T, L00, L01>(LLHD_.Synaptogenisis())),
 				LLTL_(Layer<N_T, L01, OUT>(LL01_.Synaptogenisis(), trainer)) {
@@ -299,7 +299,7 @@ inline void LayerBoss04<
 		INP,
 		L00,
 		L01,
-		OUT>::FeedForward(CommAry<OUT>& output) {
+		OUT>::FeedForward(CoAr<OUT>& output) {
 	FeedForward();
 	output = LLTL_.GetOutAry();
 }
@@ -359,10 +359,10 @@ class LayerBoss05 {
 
 		//public: TODO: TEST
 
-		LayerBoss05(const CommAry<INP>& retina, const CommAry<OUT>& trainer, double nu);
+		LayerBoss05(const CoAr<INP>& retina, const CoAr<OUT>& trainer, double nu);
 
 		void FeedForward();
-		const CommAry<OUT>& FeedForward(bool do_return); //TODO 1: add these to all cases!S
+		const CoAr<OUT>& FeedForward(bool do_return); //TODO 1: add these to all cases!S
 		void FeedBackward();
 		void Update(double nu, int batch_size);
 };
@@ -382,7 +382,7 @@ inline LayerBoss05<
 		L01,
 		L02,
 		OUT
->::LayerBoss05(const CommAry<INP>& retina, const CommAry<OUT>& trainer, double nu) :
+>::LayerBoss05(const CoAr<INP>& retina, const CoAr<OUT>& trainer, double nu) :
 				LLHD_(Layer<N_T, INP, L00>(retina)),
 				LL01_(Layer<N_T, L00, L01>(LLHD_.Synaptogenisis())),
 				LL02_(Layer<N_T, L01, L02>(LL01_.Synaptogenisis())),
@@ -431,7 +431,7 @@ template<template<int> class N_T, //Type of Neuron
 		int L01, //
 		int L02, //
 		int OUT>
-inline const CommAry<OUT>& LayerBoss05<
+inline const CoAr<OUT>& LayerBoss05<
 		N_T,
 		INP,
 		L00,
@@ -506,10 +506,10 @@ class LayerBoss06 {
 
 		//public: TODO: TEST
 
-		LayerBoss06(const CommAry<INP>& retina, const CommAry<OUT>& trainer, double nu);
+		LayerBoss06(const CoAr<INP>& retina, const CoAr<OUT>& trainer, double nu);
 
 		void FeedForward();
-		void FeedForward(CommAry<OUT>& output);
+		void FeedForward(CoAr<OUT>& output);
 		void FeedBackward();
 		void Update(double nu, int batch_size);
 };
@@ -531,7 +531,7 @@ inline LayerBoss06<
 		L02,
 		L03,
 		OUT
->::LayerBoss06(const CommAry<INP>& retina, const CommAry<OUT>& trainer, double nu) :
+>::LayerBoss06(const CoAr<INP>& retina, const CoAr<OUT>& trainer, double nu) :
 				LLHD_(Layer<N_T, INP, L00>(retina)),
 				LL01_(Layer<N_T, L00, L01>(LLHD_.Synaptogenisis())),
 				LL02_(Layer<N_T, L01, L02>(LL01_.Synaptogenisis())),
@@ -595,7 +595,7 @@ inline void LayerBoss06<
 		L01,
 		L02,
 		L03,
-		OUT>::FeedForward(CommAry<OUT>& output) {
+		OUT>::FeedForward(CoAr<OUT>& output) {
 
 	FeedForward();
 	output = LLTL_.GetOutAry();
@@ -671,7 +671,7 @@ class LayerBoss07 {
 
 	public:
 
-		LayerBoss07(const CommAry<INP>& retina, const CommAry<OUT>& trainer, double nu);
+		LayerBoss07(const CoAr<INP>& retina, const CoAr<OUT>& trainer, double nu);
 
 		void FeedForward();
 		void FeedBackward();
@@ -697,7 +697,7 @@ inline LayerBoss07<
 		L03,
 		L04,
 		OUT
->::LayerBoss07(const CommAry<INP>& retina, const CommAry<OUT>& trainer, double nu) :
+>::LayerBoss07(const CoAr<INP>& retina, const CoAr<OUT>& trainer, double nu) :
 				LLHD_(Layer<N_T, INP, L00>(retina)),
 				LL01_(Layer<N_T, L00, L01>(LLHD_.Synaptogenisis())),
 				LL02_(Layer<N_T, L01, L02>(LL01_.Synaptogenisis())),
@@ -832,7 +832,7 @@ class LayerBoss08 {
 
 	public:
 
-		LayerBoss08(const CommAry<INP>& retina, const CommAry<OUT>& trainer, double nu);
+		LayerBoss08(const CoAr<INP>& retina, const CoAr<OUT>& trainer, double nu);
 
 		void FeedForward();
 		void FeedBackward();
@@ -860,7 +860,7 @@ inline LayerBoss08<
 		L04,
 		L05,
 		OUT
->::LayerBoss08(const CommAry<INP>& retina, const CommAry<OUT>& trainer, double nu) :
+>::LayerBoss08(const CoAr<INP>& retina, const CoAr<OUT>& trainer, double nu) :
 				LLHD_(Layer<N_T, INP, L00>(retina)),
 				LL01_(Layer<N_T, L00, L01>(LLHD_.Synaptogenisis())),
 				LL02_(Layer<N_T, L01, L02>(LL01_.Synaptogenisis())),
@@ -1010,7 +1010,7 @@ class LayerBoss09 {
 
 	public:
 
-		LayerBoss09(const CommAry<INP>& retina, const CommAry<OUT>& trainer, double nu);
+		LayerBoss09(const CoAr<INP>& retina, const CoAr<OUT>& trainer, double nu);
 
 		void FeedForward();
 		void FeedBackward();
@@ -1040,7 +1040,7 @@ inline LayerBoss09<
 		L05,
 		L06,
 		OUT
->::LayerBoss09(const CommAry<INP>& retina, const CommAry<OUT>& trainer, double nu) :
+>::LayerBoss09(const CoAr<INP>& retina, const CoAr<OUT>& trainer, double nu) :
 				LLHD_(Layer<N_T, INP, L00>(retina)),
 				LL01_(Layer<N_T, L00, L01>(LLHD_.Synaptogenisis())),
 				LL02_(Layer<N_T, L01, L02>(LL01_.Synaptogenisis())),
@@ -1205,7 +1205,7 @@ class LayerBoss10 {
 
 	public:
 
-		LayerBoss10(const CommAry<INP>& retina, const CommAry<OUT>& trainer, double nu);
+		LayerBoss10(const CoAr<INP>& retina, const CoAr<OUT>& trainer, double nu);
 
 		void FeedForward();
 		void FeedBackward();
@@ -1237,7 +1237,7 @@ inline LayerBoss10<
 		L06,
 		L07,
 		OUT
->::LayerBoss10(const CommAry<INP>& retina, const CommAry<OUT>& trainer, double nu) :
+>::LayerBoss10(const CoAr<INP>& retina, const CoAr<OUT>& trainer, double nu) :
 				LLHD_(Layer<N_T, INP, L00>(retina)),
 				LL01_(Layer<N_T, L00, L01>(LLHD_.Synaptogenisis())),
 				LL02_(Layer<N_T, L01, L02>(LL01_.Synaptogenisis())),
@@ -1417,7 +1417,7 @@ class LayerBoss11 {
 
 	public:
 
-		LayerBoss11(const CommAry<INP>& retina, const CommAry<OUT>& trainer, double nu);
+		LayerBoss11(const CoAr<INP>& retina, const CoAr<OUT>& trainer, double nu);
 
 		void FeedForward();
 		void FeedBackward();
@@ -1451,7 +1451,7 @@ inline LayerBoss11<
 		L07,
 		L08,
 		OUT
->::LayerBoss11(const CommAry<INP>& retina, const CommAry<OUT>& trainer, double nu) :
+>::LayerBoss11(const CoAr<INP>& retina, const CoAr<OUT>& trainer, double nu) :
 				LLHD_(Layer<N_T, INP, L00>(retina)),
 				LL01_(Layer<N_T, L00, L01>(LLHD_.Synaptogenisis())),
 				LL02_(Layer<N_T, L01, L02>(LL01_.Synaptogenisis())),
@@ -1646,7 +1646,7 @@ class LayerBoss12 {
 
 	public:
 
-		LayerBoss12(const CommAry<INP>& retina, const CommAry<OUT>& trainer, double nu);
+		LayerBoss12(const CoAr<INP>& retina, const CoAr<OUT>& trainer, double nu);
 
 		void FeedForward();
 		void FeedBackward();
@@ -1682,7 +1682,7 @@ inline LayerBoss12<
 		L08,
 		L09,
 		OUT
->::LayerBoss12(const CommAry<INP>& retina, const CommAry<OUT>& trainer, double nu) :
+>::LayerBoss12(const CoAr<INP>& retina, const CoAr<OUT>& trainer, double nu) :
 				LLHD_(Layer<N_T, INP, L00>(retina)),
 				LL01_(Layer<N_T, L00, L01>(LLHD_.Synaptogenisis())),
 				LL02_(Layer<N_T, L01, L02>(LL01_.Synaptogenisis())),
@@ -1892,7 +1892,7 @@ class LayerBoss13 {
 
 	public:
 
-		LayerBoss13(const CommAry<INP>& retina, const CommAry<OUT>& trainer, double nu);
+		LayerBoss13(const CoAr<INP>& retina, const CoAr<OUT>& trainer, double nu);
 
 		void FeedForward();
 		void FeedBackward();
@@ -1930,7 +1930,7 @@ inline LayerBoss13<
 		L09,
 		L10,
 		OUT
->::LayerBoss13(const CommAry<INP>& retina, const CommAry<OUT>& trainer, double nu) :
+>::LayerBoss13(const CoAr<INP>& retina, const CoAr<OUT>& trainer, double nu) :
 				LLHD_(Layer<N_T, INP, L00>(retina)),
 				LL01_(Layer<N_T, L00, L01>(LLHD_.Synaptogenisis())),
 				LL02_(Layer<N_T, L01, L02>(LL01_.Synaptogenisis())),

@@ -238,7 +238,7 @@ struct CommMulCns { // Sum of the element-wise products of b and c, c is a const
 		static const int num_of_rolls = Ar_Sz / 8;
 		static const int rolled_total = num_of_rolls * 8;
 
-		void operator()(const CoAr<Ar_Sz>& a, const CoAr<Ar_Sz>& b, const double& c) {
+		void operator()(double& a, const CoAr<Ar_Sz>& b, const double& c) {
 			a = 0;
 			double a_00 = 0, a_01 = 0, a_02 = 0, a_03 = 0, a_04 = 0, a_05 = 0, a_06 = 0, a_07 = 0;
 

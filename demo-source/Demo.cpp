@@ -11,14 +11,14 @@
 #include <iomanip>
 #include <unistd.h>
 
-#include "DLog.h" // NOTICE: Must only be defined in main() .
-#include "Neuron.h"
-#include "NeuronTypes.h"
-#include "POSI.h"
-#include "Color.h"
-#include "Layer.h"
-#include "Utility.h"
-#include "TestData.h"
+#include "../DLog.h" // NOTICE: Must only be defined in main() .
+#include "../Neuron.h"
+#include "../NeuronTypes.h"
+#include "../POSI.h"
+#include "../Color.h"
+#include "../Layer.h"
+#include "../Utility.h"
+#include "../TestData.h"
 
 using std::cout;
 using std::cin;

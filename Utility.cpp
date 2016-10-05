@@ -71,7 +71,7 @@ double GetRaD(double mult, double add) {
 } //Returns random double in unit width centered on 'add' scaled by 'mult' E.G. GetRaD(2,5) gives a random in [3 .. 7]
 
 bool GetRaB() {
-	return ( (GetRaD() > 0.5) ? true : false);
+	return GetRaD() > 0.5;
 } //Returns random bool
 
 double GetRaG(double sigma, double mu) {
@@ -88,6 +88,13 @@ double GetRaG() {
 
 double GetRaGCS(double sigma, double scale) {
 	double temp = GetRaG(sigma, 0.5) * scale;
-	return ( (temp < 0 || temp > 1) ? ( (temp < 0) ? 0 : 1) : temp); //Statcked ternary operaters, whoa!
+	if (temp < 0 || temp > 1) {
+		if (temp < 0) {
+			temp = 0;
+		} else {
+			temp = 1;
+		}
+	}
+	return temp;
 } //Returns random in gaussian disribution with mu = .5 clipped (from 0 to 1) and scaled.
 

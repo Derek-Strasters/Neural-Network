@@ -44,7 +44,7 @@ all: NeuralNet-demo
 NeuralNet-demo: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C++ Linker'
-	g++ -shared -o "NeuralNet-demo" $(OBJS) $(USER_OBJS) $(LIBS)
+	g++ -shared -g -o "NeuralNet-demo" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 

@@ -128,7 +128,7 @@ void PrintAry(
 
 template<int Ar_Sz>
 struct CommZero { // Element-wise adds b to a, where parameter is a return parameter also.
-		static const int num_of_rolls = (int) (Ar_Sz / 8);
+		static const int num_of_rolls = Ar_Sz / 8;
 		static const int rolled_total = num_of_rolls * 8;
 
 		void operator()(CoAr<Ar_Sz>& a) {
@@ -152,7 +152,7 @@ struct CommZero { // Element-wise adds b to a, where parameter is a return param
 
 template<int Ar_Sz>
 struct CommAdd { // Element-wise adds b to a, where parameter is a return parameter also.
-		static const int num_of_rolls = (int) (Ar_Sz / 8);
+		static const int num_of_rolls = Ar_Sz / 8;
 		static const int rolled_total = num_of_rolls * 8;
 
 		void operator()(CoAr<Ar_Sz>& a, const CoAr<Ar_Sz>& b) {
@@ -176,7 +176,7 @@ struct CommAdd { // Element-wise adds b to a, where parameter is a return parame
 
 template<int Ar_Sz>
 struct CommSub {
-		static const int num_of_rolls = (int) (Ar_Sz / 8);
+		static const int num_of_rolls = Ar_Sz / 8;
 		static const int rolled_total = num_of_rolls * 8;
 
 		// Element-wise subtracts b from a, where parameter is a return parameter also.
@@ -235,7 +235,7 @@ struct CommSub {
 
 template<int Ar_Sz>
 struct CommMulCns { // Sum of the element-wise products of b and c, c is a constant, a is the return parameter.
-		static const int num_of_rolls = (int) (Ar_Sz / 8);
+		static const int num_of_rolls = Ar_Sz / 8;
 		static const int rolled_total = num_of_rolls * 8;
 
 		void operator()(const CoAr<Ar_Sz>& a, const CoAr<Ar_Sz>& b, const double& c) {
@@ -262,7 +262,7 @@ struct CommMulCns { // Sum of the element-wise products of b and c, c is a const
 
 template<int Ar_Sz>
 struct CommMulSum { // Sum of the element-wise products of b and c, a is the return parameter.
-		static const int num_of_rolls = (int) (Ar_Sz / 8);
+		static const int num_of_rolls = Ar_Sz / 8;
 		static const int rolled_total = num_of_rolls * 8;
 
 		void operator()(double& a, const CoAr<Ar_Sz>& b, const CoAr<Ar_Sz>& c) {

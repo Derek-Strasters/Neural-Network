@@ -52,9 +52,9 @@ class Layer {
 	private:
 
 		//Some static fields to aid in for loop unrolling
-		static const int num_of_rolls_out = (int) (OUT / 8);
+		static const int num_of_rolls_out = OUT / 8;
 		static const int rolled_total_out = num_of_rolls_out * 8;
-		static const int num_of_rolls_in = (int) (INP / 8);
+		static const int num_of_rolls_in = INP / 8;
 		static const int rolled_total_in = num_of_rolls_in * 8;
 
 		struct LayerWrap {

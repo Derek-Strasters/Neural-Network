@@ -13,7 +13,7 @@ RandTools* RandTools::myPointerInstance = NULL; // Instantiate
 
 RandTools* RandTools::Instance() { //All this work is so the random number only seeds once.
 	if (!myPointerInstance) {
-		std::srand(std::time(NULL));
+		std::srand((unsigned int) std::time(NULL));
 //		DEBUG("RandTools Singlet Created\n");
 	}
 

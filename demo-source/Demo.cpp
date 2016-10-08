@@ -139,7 +139,7 @@ void BackPropTest() {
 
 		cout << "Enter number of times to run gradient descent on training inputs (0 to exit):  \n";
 		while (! (cin >> iterations)) {
-			cout << CLRSCR;
+			CLRSCR;
 			cin.clear(); // reset failbit
 			cin.ignore(999, '\n');//skip bad input
 			cout << "\rThat wasn't a very awesome number... Please try again :  ";
@@ -235,7 +235,7 @@ void BackPropTest() {
 			if (i % skips == 0 || i == (iterations - 1)) {
 
 				/* Print Outputs */
-				cout << CLRSCR;
+				CLRSCR;
 
 				cout << "╔══════════════════════════════════════════════════════════════════════════════╗\n";
 				cout << "║    Retina: ";
